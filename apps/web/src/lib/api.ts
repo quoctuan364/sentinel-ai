@@ -85,17 +85,32 @@ export interface WorkspaceStats {
 
 async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
+  let token: string | null = null;
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem("sentinel_token");
+  }
+
+  const authHeaders: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+
   const res = await fetch(url, {
     ...options,
     headers: {
       "Content-Type": "application/json",
+      ...authHeaders,
       ...options?.headers,
     },
     cache: "no-store",
   });
   if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`API Error [${res.status}]: ${errorText}`);
+    let errorMsg = `Lỗi API [${res.status}]`;
+    try {
+      const errJson = await res.json();
+      errorMsg = errJson.detail || JSON.stringify(errJson);
+    } catch {
+      const errorText = await res.text();
+      if (errorText) errorMsg = errorText;
+    }
+    throw new Error(errorMsg);
   }
   return res.json();
 }
