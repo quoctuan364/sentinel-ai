@@ -1,0 +1,60 @@
+name: Sentinel AI CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend-test:
+    name: Backend Tests & Security Engine
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r services/api/requirements.txt
+
+      - name: Verify Alembic Migrations
+        run: |
+          alembic -c services/api/alembic.ini current
+
+      - name: Run automated test suite
+        run: |
+          pytest -v services/api/tests
+
+  frontend-check:
+    name: Frontend Lint & Production Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: apps/web/package.json
+
+      - name: Install dependencies
+        run: |
+          cd apps/web
+          npm install
+
+      - name: Run Next.js Lint
+        run: |
+          cd apps/web
+          npm run lint
+
+      - name: Next.js Production Build
+        run: |
+          cd apps/web
+          npm run build

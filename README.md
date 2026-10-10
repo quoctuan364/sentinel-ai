@@ -1,0 +1,202 @@
+# Sentinel AI — Production-Grade AI Security Review Platform
+
+[![CI](https://github.com/sentinel-ai/sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/sentinel-ai/sentinel/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![SARIF](https://img.shields.io/badge/SARIF-2.1.0-orange.svg)](https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html)
+
+**Sentinel AI** is a production-oriented, open-source AI-powered code security review platform that analyzes GitHub Pull Requests, detects potential vulnerabilities with deterministic security tools, validates findings against evidence, and generates audit reports.
+
+Unlike superficial LLM wrappers, Sentinel AI enforces **deterministic grounding**: static analysis tools and secret scanners detect verifiable vulnerabilities first, generating cryptographic fingerprints and OASIS SARIF 2.1.0 reports. A bounded AI agent then triages findings, evaluates false positives, and generates concrete remediation patches—without ever hallucinating line numbers or executing arbitrary untrusted code.
+
+---
+
+## Architecture Overview
+
+```
+                      +---------------------------------------+
+                      |       GitHub Pull Request Event       |
+                      +---------------------------------------+
+                                          |
+                                          v  [HMAC-SHA256 & Delivery ID]
+                      +---------------------------------------+
+                      |       Idempotent Webhook Receiver     |
+                      +---------------------------------------+
+                                          |
+                                          v
+                      +---------------------------------------+
+                      |       Background Task Queue           |
+                      |   (Redis Broker / In-Memory Queue)    |
+                      +---------------------------------------+
+                                          |
+                                          v
+                      +---------------------------------------+
+                      |       Deterministic Security Engine   |
+                      |  * Python AST (CWE-89, 78, 502, 95)  |
+                      |  * High-Entropy Secret Scanner        |
+                      |  * OASIS SARIF 2.1.0 Normalizer       |
+                      +---------------------------------------+
+                                          |
+                                          v
+                      +---------------------------------------+
+                      |          Bounded AI Triage            |
+                      |  * Untrusted Boundary Delimiters      |
+                      |  * Anti-Prompt Injection Filters      |
+                      |  * Typed Pydantic Schema Validation   |
+                      |  * Grounded Patch Recommendations     |
+                      +---------------------------------------+
+                                          |
+                      +-------------------+-------------------+
+                      |                                       |
+                      v                                       v
+        +---------------------------+           +---------------------------+
+        |   Advisory Report (UI)    |           |   Review Mode (GitHub)    |
+        |  Interactive Code Viewer  |           |  PR Review & Inline Notes |
+        |   Analyst Audit History   |           |  (Opt-in, Throttled)      |
+        +---------------------------+           +---------------------------+
+```
+
+---
+
+## Core Capabilities
+
+### 1. Deterministic Security Analysis
+- **AST Security Scanner**: Pinpoints SQL Injection (CWE-89), Command Injection (CWE-78), Dangerous Deserialization via Pickle (CWE-502), Insecure `eval`/`exec` (CWE-95), and Weak Hashing Algorithms (CWE-328).
+- **Secret & Credential Scanner**: Detects committed private keys, AWS access keys, GitHub tokens, database connection strings, and Slack webhooks with Shannon-entropy evaluation.
+- **Cryptographic Fingerprinting**: Finding IDs remain stable across diff line shifts, enabling deduplication and accurate historical tracking (`first_seen_at` vs `last_seen_at`).
+- **Standardized SARIF 2.1.0**: Exports machine-readable SARIF documents compatible with GitHub Code Scanning and enterprise SIEM pipelines.
+
+### 2. Bounded AI Agent Workflow
+- **Untrusted Input Containment**: Diffs and code excerpts are strictly fenced within `<<<UNTRUSTED_SCANNER_FINDINGS_JSON>>>` markers.
+- **Anti-Prompt Injection Protection**: The system directive instructs the model to ignore any embedded directives inside source code or commit messages.
+- **Strict Pydantic Schema**: All outputs are parsed into `AIPullRequestSummary` and `AITriagedFinding`.
+- **Zero Arbitrary Execution**: The platform never executes code or patches generated by the AI model.
+- **Provider Abstraction**: Switch seamlessly between `mock` (deterministic, zero-cost, offline-ready) and `openai` (`gpt-4o-mini`).
+
+### 3. Enterprise Multi-Tenancy & RBAC
+- Tenant data isolation enforced at the SQL query and repository layer.
+- Roles: `OWNER`, `ADMIN`, `DEVELOPER`, `VIEWER`.
+- Per-workspace token budgets and configurable review thresholds.
+
+### 4. Operations, Observability & Auditing
+- **Prometheus Metrics**: Exported at `/api/v1/metrics` (scans count, active scans, findings by severity, duration histograms).
+- **Health Probes**: Liveness (`/api/v1/healthz`) and readiness (`/api/v1/ready`) probes.
+- **Structured JSON Logging**: Every request is tagged with an `X-Request-ID` correlation ID.
+- **Immutable Audit Trail**: Tracks all scan executions, finding lifecycle changes, and webhook delivery records.
+
+---
+
+## Quickstart
+
+### Option A: Local Zero-Dependency Development (Recommended)
+
+Run the full stack locally with Python and Node.js without needing Docker or paid API keys:
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/sentinel-ai/sentinel.git
+   cd sentinel
+   ```
+
+2. **Configure environment**:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Start the API backend**:
+   ```bash
+   # Windows PowerShell:
+   & "services/api/.venv/Scripts/python.exe" -m uvicorn app.main:app --reload --port 8000
+   
+   # Linux/macOS:
+   python3 -m venv services/api/.venv
+   source services/api/.venv/bin/activate
+   pip install -r services/api/requirements.txt
+   uvicorn app.main:app --reload --port 8000
+   ```
+   *The backend automatically bootstraps database migrations, seeds the default workspace, and creates test repositories.*
+
+4. **Start the Next.js Frontend**:
+   ```bash
+   cd apps/web
+   npm install
+   npm run dev
+   ```
+
+5. **Open Sentinel AI**:
+   - **Frontend UI**: [http://localhost:3000](http://localhost:3000)
+   - **Audit & Deliveries Log**: [http://localhost:3000/audit](http://localhost:3000/audit)
+   - **Interactive API Docs (Swagger)**: [http://localhost:8000/api/v1/docs](http://localhost:8000/api/v1/docs)
+   - **Prometheus Metrics**: [http://localhost:8000/api/v1/metrics](http://localhost:8000/api/v1/metrics)
+
+---
+
+### Option B: Full Docker Compose Production Stack
+
+To run the complete production container cluster (FastAPI, Next.js, PostgreSQL 16, Redis 7, Prometheus, Grafana):
+
+```bash
+docker compose up -d
+```
+
+- **Frontend Web**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:8000](http://localhost:8000)
+- **Prometheus Scraper**: [http://localhost:9090](http://localhost:9090)
+- **Grafana Dashboards**: [http://localhost:3001](http://localhost:3001) (User: `admin`, Password: `sentineladmin`)
+
+---
+
+## Automated Test Suite
+
+Run the comprehensive automated test suite (security utilities, AST scanners, secret detectors, SARIF exports, API endpoints, webhook idempotency, prompt-injection resistance, and safe fixture verification):
+
+```bash
+# Windows:
+& "services/api/.venv/Scripts/pytest" -v
+
+# Linux/macOS:
+pytest -v
+```
+
+All 21 automated test specifications execute in under 3 seconds:
+- `test_health_and_readiness`
+- `test_metrics_endpoint`
+- `test_end_to_end_scan_and_findings`
+- `test_webhook_idempotency_and_signature`
+- `test_unauthenticated_request_rejected`
+- `test_tenant_workspace_isolation`
+- `test_audit_event_logging_and_retrieval`
+- `test_ai_prompt_injection_resistance`
+- `test_ai_patch_validation`
+- `test_safe_fixture_zero_findings`
+- `test_ast_scanner_vulnerabilities`
+- `test_secret_scanner`
+- `test_deterministic_fingerprint`
+- `test_sarif_export`
+- `test_fixture_scan`
+- `test_password_hashing`
+- `test_jwt_token_flow`
+- `test_jwt_invalid_token`
+- `test_github_webhook_signature_verification`
+- `test_sanitize_log_secrets`
+- `test_path_traversal_prevention`
+
+---
+
+## Limitations & Production Considerations
+
+1. **Static vs. Dynamic Analysis**: Sentinel AI performs static source code and diff inspection. It does not perform dynamic runtime fuzzing (DAST) or compile-time binary decompilation.
+2. **Production Secrets**: When deploying to production (`ENVIRONMENT=production`), generate a unique, cryptographically secure `SECRET_KEY` (e.g. `openssl rand -hex 32`) and configure database credentials in `.env`.
+3. **GitHub Review Publishing**: Ensure your GitHub App has `pull_requests: write` permissions and `GITHUB_APP_PRIVATE_KEY` configured before switching workspace policy from `ADVISORY` to `REVIEW` mode.
+4. **Queue Scalability**: For distributed horizontal scaling with multiple worker replicas, configure a managed Redis broker (`REDIS_ENABLED=true`).
+
+---
+
+## Security Vulnerability Disclosure
+
+If you discover a security vulnerability within Sentinel AI, please report it privately to `security@sentinel.ai`. We will acknowledge receipt within 48 hours and coordinate a coordinated patch release before public disclosure.
+
+---
+
+## License
+
+Sentinel AI is licensed under the [Apache License 2.0](LICENSE).
