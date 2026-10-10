@@ -79,7 +79,7 @@ export default function FindingDetailPage() {
           className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-200 transition-colors font-mono"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>BACK TO FINDINGS</span>
+          <span>QUAY LẠI DANH SÁCH LỖ HỔNG</span>
         </Link>
       </div>
 
@@ -107,20 +107,20 @@ export default function FindingDetailPage() {
               )}
             </div>
             <h1 className="text-2xl font-bold text-white tracking-tight">{finding.title}</h1>
-            <p className="text-xs font-mono text-zinc-500">Fingerprint: {finding.fingerprint}</p>
+            <p className="text-xs font-mono text-zinc-500">Mã định danh (Fingerprint): {finding.fingerprint}</p>
           </div>
 
           <div className="flex flex-col items-end gap-1.5 text-xs font-mono text-zinc-400">
-            <div>Scanner: <strong className="text-zinc-200">{finding.scanner_name}</strong></div>
-            <div>Rule: <strong className="text-zinc-200">{finding.rule_id}</strong></div>
-            <div>Confidence: <strong className="text-zinc-200">{finding.confidence}</strong></div>
+            <div>Bộ quét: <strong className="text-zinc-200">{finding.scanner_name}</strong></div>
+            <div>Quy tắc: <strong className="text-zinc-200">{finding.rule_id}</strong></div>
+            <div>Độ tin cậy: <strong className="text-zinc-200">{finding.confidence}</strong></div>
           </div>
         </div>
 
         {/* Explanation */}
         <div className="space-y-2">
           <h2 className="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono">
-            Vulnerability Details & Impact
+            Chi Tiết & Mức Độ Tác Động
           </h2>
           <p className="text-sm text-zinc-300 leading-relaxed">{finding.message}</p>
         </div>
@@ -128,11 +128,11 @@ export default function FindingDetailPage() {
         {/* Code Excerpt */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-zinc-400 uppercase tracking-wider font-bold">Affected Source Location</span>
-            <span className="text-amber-400">{finding.file_path} : Line {finding.start_line}</span>
+            <span className="text-zinc-400 uppercase tracking-wider font-bold">Vị Trí Mã Nguồn Vi Phạm</span>
+            <span className="text-amber-400">{finding.file_path} : Dòng {finding.start_line}</span>
           </div>
           <div className="p-4 rounded-lg bg-zinc-950 border border-zinc-800 font-mono text-xs overflow-x-auto text-zinc-300">
-            {finding.code_snippet || "No source preview available."}
+            {finding.code_snippet || "Không có đoạn mã xem trước."}
           </div>
         </div>
 
@@ -141,12 +141,12 @@ export default function FindingDetailPage() {
           <div className="p-5 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-950/20 to-zinc-950 space-y-3">
             <div className="flex items-center gap-2 text-xs font-bold text-amber-400 font-mono uppercase tracking-wider">
               <Cpu className="w-4 h-4" />
-              <span>AI Triage Analysis & Remediation</span>
+              <span>Phân Tích AI Triage & Giải Pháp Khắc Phục</span>
             </div>
             <p className="text-xs text-zinc-300 leading-relaxed">{finding.ai_explanation}</p>
             {finding.ai_suggested_patch && (
               <div className="space-y-1.5">
-                <div className="text-[11px] font-mono text-zinc-400">Recommended Code Patch:</div>
+                <div className="text-[11px] font-mono text-zinc-400">Bản vá mã nguồn đề xuất:</div>
                 <pre className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-emerald-400 font-mono text-xs overflow-x-auto">
                   {finding.ai_suggested_patch}
                 </pre>
@@ -158,18 +158,18 @@ export default function FindingDetailPage() {
         {/* Lifecycle Management Controls */}
         <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-950 space-y-4">
           <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-            Analyst Lifecycle Management
+            Quản Lý Vòng Đời Lỗ Hổng
           </h3>
 
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-            <span>Current State:</span>
+            <span>Trạng thái hiện tại:</span>
             <span className="px-2 py-0.5 rounded font-bold text-white bg-zinc-800">
-              {finding.lifecycle_status}
+              {finding.lifecycle_status === "OPEN" ? "ĐANG MỞ (OPEN)" : finding.lifecycle_status === "RESOLVED" ? "ĐÃ SỬA (RESOLVED)" : "BỎ QUA (WON'T FIX)"}
             </span>
           </div>
 
           <textarea
-            placeholder="Add analyst note or rationale for status change..."
+            placeholder="Thêm ghi chú phân tích hoặc lý do thay đổi trạng thái..."
             value={statusComment}
             onChange={(e) => setStatusComment(e.target.value)}
             rows={2}
@@ -180,25 +180,25 @@ export default function FindingDetailPage() {
             <button
               onClick={() => handleUpdateStatus("RESOLVED")}
               disabled={isUpdating || finding.lifecycle_status === "RESOLVED"}
-              className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors disabled:opacity-40"
+              className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors disabled:opacity-40 cursor-pointer"
             >
-              Mark as Resolved
+              Đánh dấu Đã Sửa
             </button>
 
             <button
               onClick={() => handleUpdateStatus("WONT_FIX")}
               disabled={isUpdating || finding.lifecycle_status === "WONT_FIX"}
-              className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-colors disabled:opacity-40"
+              className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-colors disabled:opacity-40 cursor-pointer"
             >
-              Mark as Won&apos;t Fix (Risk Accepted)
+              Chấp nhận rủi ro (Won&apos;t Fix)
             </button>
 
             <button
               onClick={() => handleUpdateStatus("OPEN")}
               disabled={isUpdating || finding.lifecycle_status === "OPEN"}
-              className="px-4 py-2 rounded-lg bg-red-900/60 hover:bg-red-800 text-red-200 text-xs font-bold transition-colors disabled:opacity-40"
+              className="px-4 py-2 rounded-lg bg-red-900/60 hover:bg-red-800 text-red-200 text-xs font-bold transition-colors disabled:opacity-40 cursor-pointer"
             >
-              Reopen Finding
+              Mở lại Lỗ Hổng
             </button>
           </div>
         </div>
@@ -208,7 +208,7 @@ export default function FindingDetailPage() {
           <div className="space-y-3 pt-4 border-t border-zinc-800">
             <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
               <History className="w-3.5 h-3.5 text-zinc-400" />
-              <span>Analyst Audit Log</span>
+              <span>Nhật Ký Thao Tác Chuyên Viên</span>
             </h3>
             <div className="space-y-2">
               {finding.audits.map((a) => (

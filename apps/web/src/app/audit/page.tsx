@@ -44,17 +44,17 @@ export default function AuditLogsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Audit & Integration History</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Lịch Sử Kiểm Toán & Tích Hợp</h1>
           <p className="text-sm text-zinc-400 mt-1">
-            Immutable log of workspace security actions, scan triggers, and webhook event deliveries.
+            Nhật ký bất biến ghi nhận mọi hành động an ninh, lệnh quét và sự kiện webhook tiếp nhận.
           </p>
         </div>
 
         <button
           onClick={loadData}
           disabled={loading}
-          className="p-2.5 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800 transition-colors self-start sm:self-auto"
-          title="Refresh Audit Records"
+          className="p-2.5 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800 transition-colors self-start sm:self-auto cursor-pointer"
+          title="Làm mới dữ liệu kiểm toán"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
         </button>
@@ -64,26 +64,26 @@ export default function AuditLogsPage() {
       <div className="flex items-center gap-2 border-b border-zinc-800 text-xs font-mono">
         <button
           onClick={() => setActiveTab("events")}
-          className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors cursor-pointer ${
             activeTab === "events"
               ? "border-amber-500 text-amber-400 bg-amber-500/5"
               : "border-transparent text-zinc-400 hover:text-zinc-200"
           }`}
         >
           <History className="w-4 h-4" />
-          <span>Security Audit Trail ({events.length})</span>
+          <span>Nhật Ký An Ninh ({events.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("deliveries")}
-          className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors cursor-pointer ${
             activeTab === "deliveries"
               ? "border-amber-500 text-amber-400 bg-amber-500/5"
               : "border-transparent text-zinc-400 hover:text-zinc-200"
           }`}
         >
           <Webhook className="w-4 h-4" />
-          <span>Webhook Deliveries ({deliveries.length})</span>
+          <span>Sự Kiện Webhook ({deliveries.length})</span>
         </button>
       </div>
 
@@ -92,22 +92,22 @@ export default function AuditLogsPage() {
         {loading ? (
           <div className="p-16 text-center">
             <div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <span className="text-zinc-500 font-mono text-xs">Loading audit events...</span>
+            <span className="text-zinc-500 font-mono text-xs">Đang tải dữ liệu kiểm toán...</span>
           </div>
         ) : activeTab === "events" ? (
           events.length === 0 ? (
             <div className="p-16 text-center text-zinc-500 text-sm">
-              No audit events recorded yet. Perform scans or status changes to generate activity.
+              Chưa có sự kiện kiểm toán nào được ghi lại.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead className="bg-zinc-950/60 border-b border-zinc-800 text-xs font-mono text-zinc-400 uppercase">
                   <tr>
-                    <th className="px-4 py-3">Timestamp</th>
-                    <th className="px-4 py-3">Action</th>
-                    <th className="px-4 py-3">Resource</th>
-                    <th className="px-4 py-3">Details</th>
+                    <th className="px-4 py-3">Thời gian</th>
+                    <th className="px-4 py-3">Hành động</th>
+                    <th className="px-4 py-3">Tài nguyên</th>
+                    <th className="px-4 py-3">Chi tiết</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-800/60 font-mono text-xs">
@@ -135,17 +135,17 @@ export default function AuditLogsPage() {
           )
         ) : deliveries.length === 0 ? (
           <div className="p-16 text-center text-zinc-500 text-sm">
-            No webhook deliveries logged yet. Configure your GitHub App webhook to see incoming events.
+            Chưa có webhook nào được tiếp nhận.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-zinc-950/60 border-b border-zinc-800 text-xs font-mono text-zinc-400 uppercase">
                 <tr>
-                  <th className="px-4 py-3">Delivery ID</th>
-                  <th className="px-4 py-3">Event Type</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Received At</th>
+                  <th className="px-4 py-3">Mã Giao Nhận</th>
+                  <th className="px-4 py-3">Loại Sự Kiện</th>
+                  <th className="px-4 py-3">Trạng thái</th>
+                  <th className="px-4 py-3">Thời gian nhận</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60 font-mono text-xs">
@@ -167,7 +167,7 @@ export default function AuditLogsPage() {
                             : "bg-red-500/10 text-red-400 border border-red-500/20"
                         }`}
                       >
-                        {d.status}
+                        {d.status === "PROCESSED" ? "ĐÃ XỬ LÝ" : d.status === "IGNORED" ? "BỎ QUA" : d.status}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-zinc-400">

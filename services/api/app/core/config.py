@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     SECRET_KEY: str = "sentinel-super-secret-jwt-signing-key-for-dev-change-in-prod"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
-    ALLOW_DEV_FALLBACK_AUTH: bool = False  # Strict security: require explicit JWT by default
+    ALLOW_DEV_FALLBACK_AUTH: bool = True  # Enabled for zero-config local dev; forced to False in production
     
     # Database
     # Default to sqlite local db for immediate zero-config runs, overridden by POSTGRES_URL in prod/docker

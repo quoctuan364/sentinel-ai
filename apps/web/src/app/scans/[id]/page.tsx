@@ -80,7 +80,7 @@ export default function ScanDetailPage() {
             className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-200 transition-colors font-mono"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>BACK TO SCANS</span>
+            <span>QUAY LẠI DANH SÁCH QUÉT</span>
           </Link>
           <h1 className="text-2xl font-bold text-white tracking-tight">{scan.title}</h1>
           <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-zinc-400">
@@ -96,7 +96,7 @@ export default function ScanDetailPage() {
             <span>&bull;</span>
             <span className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-zinc-500" />
-              <span>{scan.duration_seconds ?? 0}s execution</span>
+              <span>Thời gian thực thi: {scan.duration_seconds ?? 0}s</span>
             </span>
           </div>
         </div>
@@ -104,10 +104,10 @@ export default function ScanDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={handleDownloadSarif}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-800/80 hover:bg-zinc-800 text-xs text-zinc-200 font-semibold transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-800/80 hover:bg-zinc-800 text-xs text-zinc-200 font-semibold transition-colors cursor-pointer"
           >
             <Download className="w-3.5 h-3.5 text-zinc-400" />
-            <span>Export SARIF 2.1.0</span>
+            <span>Xuất SARIF 2.1.0</span>
           </button>
 
           <span
@@ -117,7 +117,7 @@ export default function ScanDetailPage() {
                 : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
             }`}
           >
-            {scan.status}
+            {scan.status === "SUCCEEDED" ? "THÀNH CÔNG" : scan.status === "RUNNING" ? "ĐANG CHẠY" : scan.status}
           </span>
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function ScanDetailPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Cpu className="w-5 h-5 text-amber-400" />
-              <h2 className="text-base font-bold text-white">AI Security Triage & Executive Assessment</h2>
+              <h2 className="text-base font-bold text-white">Đánh Giá An Ninh & Thẩm Định AI Triage</h2>
             </div>
             <span
               className={`px-2 py-0.5 rounded text-xs font-mono font-bold ${
@@ -139,7 +139,7 @@ export default function ScanDetailPage() {
                   : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
               }`}
             >
-              RISK: {scan.ai_summary.risk_assessment}
+              MỨC ĐỘ RỦI RO: {scan.ai_summary.risk_assessment}
             </span>
           </div>
 
@@ -149,7 +149,7 @@ export default function ScanDetailPage() {
 
           {scan.ai_summary.key_vulnerabilities_highlighted && scan.ai_summary.key_vulnerabilities_highlighted.length > 0 && (
             <div className="space-y-1.5 pt-2 border-t border-zinc-800">
-              <div className="text-xs font-mono text-zinc-400 uppercase">Key Identified Risk Vectors:</div>
+              <div className="text-xs font-mono text-zinc-400 uppercase">Các vector rủi ro chính được xác định:</div>
               <ul className="text-xs text-zinc-300 list-disc list-inside space-y-1">
                 {scan.ai_summary.key_vulnerabilities_highlighted.map((vuln, idx) => (
                   <li key={idx} className="text-amber-300">{vuln}</li>
@@ -165,15 +165,15 @@ export default function ScanDetailPage() {
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 text-amber-400" />
-            <span>Deterministic Security Findings ({scan.findings?.length ?? 0})</span>
+            <span>Các Lỗ Hổng Bảo Mật Tất Định ({scan.findings?.length ?? 0})</span>
           </h2>
-          <span className="text-xs text-zinc-500 font-mono">Deduplicated by cryptographic fingerprint</span>
+          <span className="text-xs text-zinc-500 font-mono">Khử trùng lặp qua chữ ký mật mã (Fingerprint)</span>
         </div>
 
         {(!scan.findings || scan.findings.length === 0) ? (
           <div className="p-12 text-center text-zinc-500 text-sm border border-zinc-800 rounded-xl bg-zinc-900/30">
             <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-            No vulnerabilities detected across scanned files. Clean security posture.
+            Không phát hiện lỗ hổng bảo mật nào trong các tệp đã quét. Mã nguồn an toàn.
           </div>
         ) : (
           <div className="space-y-4">
@@ -208,7 +208,7 @@ export default function ScanDetailPage() {
                   <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
                     <span className="px-2 py-0.5 bg-zinc-800 rounded">{f.scanner_name}</span>
                     <span>&bull;</span>
-                    <span>Rule: {f.rule_id}</span>
+                    <span>Quy tắc: {f.rule_id}</span>
                   </div>
                 </div>
 
@@ -218,7 +218,7 @@ export default function ScanDetailPage() {
                 <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-800/80 font-mono text-xs space-y-2">
                   <div className="text-zinc-500 flex items-center justify-between border-b border-zinc-800/60 pb-1.5">
                     <span className="text-amber-400">{f.file_path}</span>
-                    <span>Line {f.start_line}</span>
+                    <span>Dòng {f.start_line}</span>
                   </div>
                   {f.code_snippet && (
                     <pre className="text-zinc-300 overflow-x-auto py-1">
@@ -232,12 +232,12 @@ export default function ScanDetailPage() {
                   <div className="p-4 rounded-lg bg-zinc-950/70 border border-amber-500/20 space-y-3">
                     <div className="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider font-mono">
                       <Cpu className="w-3.5 h-3.5" />
-                      <span>AI Triage Analysis & Remediation</span>
+                      <span>Phân Tích AI Triage & Giải Pháp Khắc Phục</span>
                     </div>
                     <p className="text-xs text-zinc-300 leading-relaxed">{f.ai_explanation}</p>
                     {f.ai_suggested_patch && (
                       <div className="space-y-1">
-                        <div className="text-[11px] font-mono text-zinc-500">Recommended Code Patch:</div>
+                        <div className="text-[11px] font-mono text-zinc-500">Bản vá mã nguồn đề xuất:</div>
                         <pre className="p-3 rounded bg-zinc-900 border border-zinc-800 text-emerald-400 font-mono text-xs overflow-x-auto">
                           {f.ai_suggested_patch}
                         </pre>
@@ -247,12 +247,12 @@ export default function ScanDetailPage() {
                 )}
 
                 <div className="flex items-center justify-between text-xs text-zinc-500 font-mono pt-2 border-t border-zinc-800/60">
-                  <span>Lifecycle: <strong className="text-zinc-300">{f.lifecycle_status}</strong></span>
+                  <span>Trạng thái: <strong className="text-zinc-300">{f.lifecycle_status}</strong></span>
                   <Link
                     href={`/findings/${f.id}`}
                     className="text-amber-400 hover:text-amber-300 font-sans font-semibold underline"
                   >
-                    Manage Finding Lifecycle &rarr;
+                    Quản lý vòng đời lỗ hổng &rarr;
                   </Link>
                 </div>
               </div>

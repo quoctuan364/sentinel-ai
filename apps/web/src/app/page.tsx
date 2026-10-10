@@ -52,15 +52,15 @@ export default function LandingPage() {
       <section className="relative text-center max-w-4xl mx-auto space-y-6">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 text-xs font-mono font-medium">
           <Zap className="w-3.5 h-3.5 text-amber-400" />
-          <span>PRODUCTION-READY CODE SECURITY PLATFORM</span>
+          <span>NỀN TẢNG BẢO MẬT MÃ NGUỒN CHUẨN DOANH NGHIỆP</span>
         </div>
 
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
-          Deterministic Security Analysis Meets <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600">Bounded AI Triage</span>
+          Phân Tích Bảo Mật Tất Định Kết Hợp <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600">AI Triage Kiểm Chứng</span>
         </h1>
 
         <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-          Sentinel AI analyzes GitHub Pull Requests, detects vulnerabilities with deterministic security tools (Bandit, Detect-secrets, Semgrep), and validates findings with evidence-grounded AI reviews.
+          Sentinel AI tự động phân tích GitHub Pull Request, phát hiện lỗ hổng bằng công cụ bảo mật tất định và xác thực bằng chứng qua mô hình AI an toàn, chống ảo giác.
         </p>
 
         {/* CTA Buttons */}
@@ -68,17 +68,17 @@ export default function LandingPage() {
           <button
             onClick={handleRunDemoScan}
             disabled={isScanning}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-orange-500/25 disabled:opacity-50"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-orange-500/25 disabled:opacity-50 cursor-pointer"
           >
             {isScanning ? (
               <>
                 <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                <span>Scanning Fixtures...</span>
+                <span>Đang Quét Mã Nguồn...</span>
               </>
             ) : (
               <>
                 <Terminal className="w-4 h-4 text-slate-950" />
-                <span>Launch Interactive Test Scan</span>
+                <span>Chạy Thử Nghiệm Quét Lỗ Hổng</span>
               </>
             )}
           </button>
@@ -87,7 +87,7 @@ export default function LandingPage() {
             href="/dashboard"
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-zinc-700 bg-zinc-800/70 hover:bg-zinc-800 text-zinc-200 font-semibold transition-colors"
           >
-            <span>Open Security Dashboard</span>
+            <span>Mở Bảng Điều Khiển</span>
             <ArrowRight className="w-4 h-4 text-zinc-400" />
           </Link>
         </div>
@@ -95,7 +95,7 @@ export default function LandingPage() {
         {scanResult && (
           <div className="p-4 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-sm flex items-center justify-center gap-2 animate-fade-in font-mono">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>Scan #{scanResult.id.substring(0, 8)} completed! Redirecting to report...</span>
+            <span>Quét hoàn tất lượt #{scanResult.id.substring(0, 8)}! Đang chuyển đến báo cáo...</span>
           </div>
         )}
       </section>
@@ -103,8 +103,8 @@ export default function LandingPage() {
       {/* Security Architecture & Workflow */}
       <section className="space-y-8">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">How Sentinel AI Works</h2>
-          <p className="text-sm text-zinc-400">Strict pipeline separating deterministic detection from bounded AI reasoning.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Quy Trình Hoạt Động Của Sentinel AI</h2>
+          <p className="text-sm text-zinc-400">Quy trình nghiêm ngặt phân tách rõ ràng giữa phát hiện tất định và thẩm định AI có kiểm soát.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -112,9 +112,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-amber-400">
               <GitPullRequest className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-white">1. Ingest PR Webhook</h3>
+            <h3 className="font-semibold text-white">1. Tiếp Nhận Webhook PR</h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              GitHub App delivers webhook with HMAC SHA-256 signature. Idempotency layer deduplicates deliveries and enqueues scan job.
+              GitHub App gửi webhook kèm chữ ký HMAC SHA-256. Lớp Idempotency chống trùng lặp và đưa lệnh quét vào hàng đợi an toàn.
             </p>
           </div>
 
@@ -122,9 +122,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-orange-400">
               <FileCode className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-white">2. Deterministic Scanners</h3>
+            <h3 className="font-semibold text-white">2. Bộ Quét Tĩnh Tất Định</h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Analyzes Python AST & text patterns (CWE-89, CWE-78, CWE-502, CWE-798) with zero false-fabrication. Exports standardized SARIF 2.1.0.
+              Phân tích AST mã nguồn và chuỗi mẫu (CWE-89, CWE-78, CWE-502, CWE-798) không phán đoán bừa bãi. Xuất định dạng chuẩn SARIF 2.1.0.
             </p>
           </div>
 
@@ -134,7 +134,7 @@ export default function LandingPage() {
             </div>
             <h3 className="font-semibold text-white">3. Bounded AI Triage</h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Treats code as untrusted input with prompt-injection boundaries. Triages scanner findings, evaluates false positives, and generates concrete remediation patches.
+              Xử lý mã nguồn như dữ liệu không tin cậy với ranh giới chống Prompt Injection. Đánh giá dương tính giả và tạo bản vá đề xuất.
             </p>
           </div>
 
@@ -142,9 +142,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-emerald-400">
               <Lock className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-white">4. Evidence-Based Report</h3>
+            <h3 className="font-semibold text-white">4. Báo Cáo & Nhật Ký Kiểm Toán</h3>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Renders interactive findings explorer with code snippets, audit trail, and opt-in GitHub review publication in advisory or review mode.
+              Hiển thị danh sách lỗ hổng kèm đoạn code vi phạm, lịch sử kiểm toán và xuất báo cáo GitHub Check Run theo chế độ cấu hình.
             </p>
           </div>
         </div>
@@ -157,28 +157,28 @@ export default function LandingPage() {
             <Lock className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">Secure-by-Default Architecture</h2>
-            <p className="text-xs text-zinc-400">Designed under the premise that all reviewed code is potentially hostile.</p>
+            <h2 className="text-xl font-bold text-white">Kiến Trúc An Ninh Mặc Định (Secure-by-Default)</h2>
+            <p className="text-xs text-zinc-400">Được thiết kế dựa trên nguyên tắc mọi đoạn mã đầu vào đều có thể là mã độc.</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-zinc-300">
           <div className="space-y-2 border-l-2 border-amber-500/50 pl-4">
-            <h4 className="font-semibold text-white">Anti-Prompt Injection</h4>
+            <h4 className="font-semibold text-white">Chống Tấn Công Prompt Injection</h4>
             <p className="text-xs text-zinc-400">
-              Diffs and comments are strictly isolated inside fenced delimiters (<code className="text-amber-400">{"<<<UNTRUSTED_CONTENT>>>"}</code>). Strict Pydantic schemas reject hallucinated or command payloads.
+              Nội dung PR được bọc kín trong thẻ phân tách (<code className="text-amber-400">{"<<<UNTRUSTED_CONTENT>>>"}</code>). Lược đồ Pydantic nghiêm ngặt từ chối lệnh can thiệp.
             </p>
           </div>
           <div className="space-y-2 border-l-2 border-amber-500/50 pl-4">
-            <h4 className="font-semibold text-white">Zero Arbitrary Execution</h4>
+            <h4 className="font-semibold text-white">Không Thực Thi Mã Độc Tùy Tiện</h4>
             <p className="text-xs text-zinc-400">
-              Scanners run with static AST & pattern parsing. The host environment never executes build scripts or tests from incoming pull requests.
+              Các bộ quét chạy phân tích cú pháp AST tĩnh và biểu thức chính quy. Hệ thống không bao giờ chạy file thực thi hoặc script từ PR.
             </p>
           </div>
           <div className="space-y-2 border-l-2 border-amber-500/50 pl-4">
-            <h4 className="font-semibold text-white">Multi-Tenant Isolation</h4>
+            <h4 className="font-semibold text-white">Cô Lập Không Gian Làm Việc (Multi-Tenant)</h4>
             <p className="text-xs text-zinc-400">
-              All scans, findings, tokens, and audit records are bound to workspace boundaries and enforced at both SQL query and service layers.
+              Mọi lượt quét, phát hiện, token và nhật ký kiểm toán đều được phân tách nghiêm ngặt theo ID không gian làm việc (Workspace) ở cả tầng SQL lẫn Service.
             </p>
           </div>
         </div>
@@ -187,8 +187,8 @@ export default function LandingPage() {
       {/* Self-Hosting & Quickstart */}
       <section className="space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-white">Self-Host in Minutes</h2>
-          <p className="text-sm text-zinc-400">Complete Docker Compose stack with PostgreSQL, Redis, Prometheus, and Next.js frontend.</p>
+          <h2 className="text-2xl font-bold text-white">Triển Khai Cục Bộ & Máy Chủ</h2>
+          <p className="text-sm text-zinc-400">Ngăn xếp hoàn chỉnh với Docker Compose: PostgreSQL, Redis, Prometheus, FastAPI và Next.js.</p>
         </div>
 
         <div className="p-6 rounded-xl border border-zinc-800 bg-zinc-950 font-mono text-sm text-zinc-300 space-y-4">
@@ -197,18 +197,18 @@ export default function LandingPage() {
             <span>docker compose up</span>
           </div>
           <pre className="text-amber-400 overflow-x-auto text-xs leading-relaxed">
-{`# 1. Clone repository
-git clone https://github.com/sentinel-ai/sentinel.git
-cd sentinel
+{`# 1. Clone mã nguồn
+git clone https://github.com/quoctuan364/sentinel-ai.git
+cd sentinel-ai
 
-# 2. Configure environment (works out of the box with safe defaults)
+# 2. Cấu hình biến môi trường
 cp .env.example .env
 
-# 3. Spin up full production-grade stack
+# 3. Khởi chạy toàn bộ hệ thống
 docker compose up -d
 
-# 4. Open Sentinel AI
-# Frontend: http://localhost:3000
+# 4. Truy cập Sentinel AI
+# Frontend: http://localhost:3001
 # API Docs: http://localhost:8000/api/v1/docs
 # Metrics:  http://localhost:8000/api/v1/metrics`}
           </pre>

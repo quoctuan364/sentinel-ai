@@ -51,18 +51,18 @@ export default function FindingsExplorerPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
-            Security Findings Explorer
+            Danh Sách Lỗ Hổng Bảo Mật
           </h1>
           <p className="text-sm text-zinc-400 mt-1">
-            Browse, filter, and triage normalized static analysis findings across all repositories.
+            Tra cứu, lọc và xử lý các lỗ hổng bảo mật chuẩn hóa qua phân tích tĩnh trên toàn bộ kho mã nguồn.
           </p>
         </div>
 
         <button
           onClick={loadFindings}
           disabled={loading}
-          className="p-2.5 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800 transition-colors self-start sm:self-auto"
-          title="Refresh Findings"
+          className="p-2.5 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800 transition-colors self-start sm:self-auto cursor-pointer"
+          title="Làm mới danh sách"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
         </button>
@@ -74,7 +74,7 @@ export default function FindingsExplorerPage() {
           <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search by title, rule, or file path..."
+            placeholder="Tìm kiếm theo tiêu đề, mã quy tắc hoặc tên tệp..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-amber-500 font-mono"
@@ -88,11 +88,11 @@ export default function FindingsExplorerPage() {
             onChange={(e) => setSelectedSeverity(e.target.value)}
             className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-300 font-mono focus:outline-none focus:border-amber-500"
           >
-            <option value="">All Severities</option>
-            <option value="CRITICAL">Critical</option>
-            <option value="HIGH">High</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="LOW">Low</option>
+            <option value="">Tất cả mức độ</option>
+            <option value="CRITICAL">Nghiêm trọng (Critical)</option>
+            <option value="HIGH">Mức cao (High)</option>
+            <option value="MEDIUM">Trung bình (Medium)</option>
+            <option value="LOW">Mức thấp (Low)</option>
           </select>
 
           {/* Lifecycle Status filter */}
@@ -101,10 +101,10 @@ export default function FindingsExplorerPage() {
             onChange={(e) => setSelectedStatus(e.target.value)}
             className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-300 font-mono focus:outline-none focus:border-amber-500"
           >
-            <option value="">All Statuses</option>
-            <option value="OPEN">Open</option>
-            <option value="RESOLVED">Resolved</option>
-            <option value="WONT_FIX">Won&apos;t Fix</option>
+            <option value="">Tất cả trạng thái</option>
+            <option value="OPEN">Đang mở (Open)</option>
+            <option value="RESOLVED">Đã khắc phục (Resolved)</option>
+            <option value="WONT_FIX">Không khắc phục (Won&apos;t Fix)</option>
           </select>
         </div>
       </div>
@@ -114,23 +114,23 @@ export default function FindingsExplorerPage() {
         {loading ? (
           <div className="p-16 text-center">
             <div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <span className="text-zinc-500 font-mono text-xs">Querying security database...</span>
+            <span className="text-zinc-500 font-mono text-xs">Đang truy vấn cơ sở dữ liệu an ninh...</span>
           </div>
         ) : findings.length === 0 ? (
           <div className="p-16 text-center text-zinc-500 text-sm">
-            No matching security findings found for the selected filter criteria.
+            Không tìm thấy lỗ hổng bảo mật nào khớp với điều kiện lọc.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-zinc-950/60 border-b border-zinc-800 text-xs font-mono text-zinc-400 uppercase">
                 <tr>
-                  <th className="px-4 py-3">Severity</th>
-                  <th className="px-4 py-3">Finding Title / CWE</th>
-                  <th className="px-4 py-3">File Location</th>
-                  <th className="px-4 py-3">Scanner</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3 text-right">Action</th>
+                  <th className="px-4 py-3">Mức độ</th>
+                  <th className="px-4 py-3">Tên lỗ hổng / CWE</th>
+                  <th className="px-4 py-3">Vị trí tệp</th>
+                  <th className="px-4 py-3">Bộ quét</th>
+                  <th className="px-4 py-3">Trạng thái</th>
+                  <th className="px-4 py-3 text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60 font-mono text-xs">
@@ -159,7 +159,7 @@ export default function FindingsExplorerPage() {
                     </td>
                     <td className="px-4 py-3 text-zinc-400">
                       <span className="text-amber-400">{f.file_path}</span>
-                      <span className="text-zinc-500 text-[11px]"> : {f.start_line}</span>
+                      <span className="text-zinc-500 text-[11px]"> : Dòng {f.start_line}</span>
                     </td>
                     <td className="px-4 py-3 text-zinc-300">
                       {f.scanner_name}
@@ -172,7 +172,7 @@ export default function FindingsExplorerPage() {
                             : "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
                         }`}
                       >
-                        {f.lifecycle_status}
+                        {f.lifecycle_status === "OPEN" ? "ĐANG MỞ" : f.lifecycle_status === "RESOLVED" ? "ĐÃ SỬA" : f.lifecycle_status}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -180,7 +180,7 @@ export default function FindingsExplorerPage() {
                         href={`/findings/${f.id}`}
                         className="text-amber-400 hover:text-amber-300 font-sans font-semibold underline"
                       >
-                        Details
+                        Chi tiết
                       </Link>
                     </td>
                   </tr>

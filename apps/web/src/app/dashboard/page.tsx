@@ -85,10 +85,10 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Security Operations Center
+            Trung Tâm Giám Sát An Ninh (SOC)
           </h1>
           <p className="text-sm text-zinc-400 mt-1">
-            Real-time status of Pull Request security scans, deterministic findings, and AI triage.
+            Trạng thái thời gian thực các đợt quét Pull Request, phát hiện lỗ hổng tất định và thẩm định AI.
           </p>
         </div>
 
@@ -96,8 +96,8 @@ export default function DashboardPage() {
           <button
             onClick={loadData}
             disabled={loading}
-            className="p-2.5 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800 transition-colors"
-            title="Refresh Dashboard"
+            className="p-2.5 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
+            title="Làm mới bảng điều khiển"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </button>
@@ -105,17 +105,17 @@ export default function DashboardPage() {
           <button
             onClick={handleTriggerQuickScan}
             disabled={isTriggering}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold hover:brightness-110 active:scale-95 transition-all shadow-md shadow-orange-500/20 text-sm disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold hover:brightness-110 active:scale-95 transition-all shadow-md shadow-orange-500/20 text-sm disabled:opacity-50 cursor-pointer"
           >
             {isTriggering ? (
               <>
                 <div className="w-3.5 h-3.5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                <span>Running Scan...</span>
+                <span>Đang Quét...</span>
               </>
             ) : (
               <>
                 <Play className="w-4 h-4 fill-slate-950 text-slate-950" />
-                <span>Trigger Scan</span>
+                <span>Quét Ngay</span>
               </>
             )}
           </button>
@@ -127,7 +127,7 @@ export default function DashboardPage() {
         {/* Total Scans */}
         <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/40 space-y-1">
           <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
-            <span>TOTAL SCANS</span>
+            <span>TỔNG LƯỢT QUÉT</span>
             <Activity className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-white font-mono">
@@ -135,45 +135,45 @@ export default function DashboardPage() {
           </div>
           <div className="text-xs text-emerald-400 flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Active Worker Pipeline</span>
+            <span>Hàng đợi xử lý hoạt động</span>
           </div>
         </div>
 
         {/* Critical Vulnerabilities */}
         <div className="p-5 rounded-xl border border-red-900/40 bg-red-950/20 space-y-1">
           <div className="flex items-center justify-between text-xs text-red-400 font-mono">
-            <span>CRITICAL SEVERITY</span>
+            <span>MỨC NGUY HIỂM (CRITICAL)</span>
             <AlertTriangle className="w-4 h-4 text-red-500" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-red-400 font-mono">
             {severityCounts.CRITICAL}
           </div>
-          <div className="text-xs text-red-300">Requires immediate patch</div>
+          <div className="text-xs text-red-300">Yêu cầu vá khẩn cấp</div>
         </div>
 
         {/* High Severity */}
         <div className="p-5 rounded-xl border border-orange-900/40 bg-orange-950/20 space-y-1">
           <div className="flex items-center justify-between text-xs text-orange-400 font-mono">
-            <span>HIGH SEVERITY</span>
+            <span>MỨC CAO (HIGH)</span>
             <ShieldAlert className="w-4 h-4 text-orange-500" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-orange-400 font-mono">
             {severityCounts.HIGH}
           </div>
-          <div className="text-xs text-orange-300">Blocks PR merge in review mode</div>
+          <div className="text-xs text-orange-300">Chặn merge PR ở chế độ kiểm duyệt</div>
         </div>
 
         {/* AI Tokens / Budget */}
         <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/40 space-y-1">
           <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
-            <span>AI TRIAGE TOKENS</span>
+            <span>LƯỢNG TOKEN AI TRIAGE</span>
             <Cpu className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-bold text-zinc-200 font-mono">
             {stats?.total_ai_tokens ? stats.total_ai_tokens.toLocaleString() : "370"}
           </div>
           <div className="text-xs text-zinc-500">
-            Mode: <span className="text-zinc-300 font-medium">{stats?.review_mode || "ADVISORY"}</span>
+            Chế độ: <span className="text-zinc-300 font-medium">{stats?.review_mode === "ADVISORY" ? "TƯ VẤN (ADVISORY)" : stats?.review_mode || "TƯ VẤN"}</span>
           </div>
         </div>
       </div>
@@ -185,27 +185,27 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-white flex items-center gap-2">
               <Clock className="w-4 h-4 text-amber-400" />
-              <span>Recent Pull Request Scans</span>
+              <span>Các Lượt Quét Pull Request Gần Đây</span>
             </h2>
-            <span className="text-xs text-zinc-500 font-mono">{scans.length} recorded</span>
+            <span className="text-xs text-zinc-500 font-mono">{scans.length} lượt đã ghi</span>
           </div>
 
           <div className="border border-zinc-800 rounded-xl overflow-hidden bg-zinc-900/30">
             {scans.length === 0 ? (
               <div className="p-12 text-center text-zinc-500 text-sm">
-                No scans executed yet. Click &quot;Trigger Scan&quot; to run security review against test fixtures.
+                Chưa có lượt quét nào. Bấm &quot;Quét Ngay&quot; để bắt đầu phân tích mã nguồn.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-zinc-950/60 border-b border-zinc-800 text-xs font-mono text-zinc-400 uppercase">
                     <tr>
-                      <th className="px-4 py-3">Scan / Title</th>
-                      <th className="px-4 py-3">Branch</th>
-                      <th className="px-4 py-3">Status</th>
-                      <th className="px-4 py-3">Findings</th>
-                      <th className="px-4 py-3">Duration</th>
-                      <th className="px-4 py-3 text-right">Action</th>
+                      <th className="px-4 py-3">Lượt quét / Tiêu đề</th>
+                      <th className="px-4 py-3">Nhánh</th>
+                      <th className="px-4 py-3">Trạng thái</th>
+                      <th className="px-4 py-3">Số lỗi</th>
+                      <th className="px-4 py-3">Thời gian</th>
+                      <th className="px-4 py-3 text-right">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-800/60 font-mono text-xs">
@@ -230,7 +230,7 @@ export default function DashboardPage() {
                                 : "bg-red-500/10 text-red-400 border border-red-500/20"
                             }`}
                           >
-                            {scan.status}
+                            {scan.status === "SUCCEEDED" ? "THÀNH CÔNG" : scan.status === "RUNNING" ? "ĐANG CHẠY" : scan.status}
                           </span>
                         </td>
                         <td className="px-4 py-3">
@@ -244,7 +244,7 @@ export default function DashboardPage() {
                             href={`/scans/${scan.id}`}
                             className="text-amber-400 hover:text-amber-300 font-sans text-xs underline"
                           >
-                            View Report
+                            Xem báo cáo
                           </Link>
                         </td>
                       </tr>
@@ -260,20 +260,20 @@ export default function DashboardPage() {
         <div className="space-y-6">
           <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/40 space-y-4">
             <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-              Vulnerabilities by Severity
+              Phân Loại Lỗ Hổng
             </h3>
 
             <div className="space-y-3">
               {[
-                { label: "Critical", count: severityCounts.CRITICAL, color: "bg-red-500", key: "CRITICAL" },
-                { label: "High", count: severityCounts.HIGH, color: "bg-orange-500", key: "HIGH" },
-                { label: "Medium", count: severityCounts.MEDIUM, color: "bg-yellow-500", key: "MEDIUM" },
-                { label: "Low", count: severityCounts.LOW, color: "bg-blue-500", key: "LOW" },
+                { label: "Nghiêm trọng (Critical)", count: severityCounts.CRITICAL, color: "bg-red-500", key: "CRITICAL" },
+                { label: "Mức cao (High)", count: severityCounts.HIGH, color: "bg-orange-500", key: "HIGH" },
+                { label: "Trung bình (Medium)", count: severityCounts.MEDIUM, color: "bg-yellow-500", key: "MEDIUM" },
+                { label: "Thấp (Low)", count: severityCounts.LOW, color: "bg-blue-500", key: "LOW" },
               ].map((item) => (
                 <button
                   key={item.key}
                   onClick={() => setFilterSeverity(filterSeverity === item.key ? "ALL" : item.key)}
-                  className={`w-full flex items-center justify-between p-2.5 rounded-lg border transition-all text-xs font-mono ${
+                  className={`w-full flex items-center justify-between p-2.5 rounded-lg border transition-all text-xs font-mono cursor-pointer ${
                     filterSeverity === item.key
                       ? "border-amber-500 bg-amber-500/10"
                       : "border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/40"
@@ -293,7 +293,7 @@ export default function DashboardPage() {
                 href="/findings"
                 className="w-full block text-center py-2 text-xs font-semibold text-amber-400 hover:text-amber-300"
               >
-                Open Full Findings Explorer &rarr;
+                Mở Danh Sách Chi Tiết Lỗ Hổng &rarr;
               </Link>
             </div>
           </div>
@@ -301,24 +301,24 @@ export default function DashboardPage() {
           {/* Connected Scanners Widget */}
           <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/40 space-y-3">
             <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-              Integrated Security Engines
+              Công Cụ Bảo Mật Tích Hợp
             </h3>
             <ul className="text-xs space-y-2 text-zinc-300">
               <li className="flex items-center justify-between">
                 <span>Bandit Python AST</span>
-                <span className="text-emerald-400 font-mono text-[11px]">ACTIVE</span>
+                <span className="text-emerald-400 font-mono text-[11px]">HOẠT ĐỘNG</span>
               </li>
               <li className="flex items-center justify-between">
                 <span>Detect-secrets Engine</span>
-                <span className="text-emerald-400 font-mono text-[11px]">ACTIVE</span>
+                <span className="text-emerald-400 font-mono text-[11px]">HOẠT ĐỘNG</span>
               </li>
               <li className="flex items-center justify-between">
-                <span>SARIF 2.1.0 Exporter</span>
-                <span className="text-emerald-400 font-mono text-[11px]">ACTIVE</span>
+                <span>Xuất SARIF 2.1.0</span>
+                <span className="text-emerald-400 font-mono text-[11px]">HOẠT ĐỘNG</span>
               </li>
               <li className="flex items-center justify-between">
                 <span>AI Triage Provider</span>
-                <span className="text-amber-400 font-mono text-[11px]">BOUNDED / GROUNDED</span>
+                <span className="text-amber-400 font-mono text-[11px]">CÓ KIỂM SOÁT</span>
               </li>
             </ul>
           </div>

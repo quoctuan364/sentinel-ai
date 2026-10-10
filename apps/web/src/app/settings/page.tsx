@@ -54,9 +54,9 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Workspace Settings & Administration</h1>
+        <h1 className="text-2xl font-bold text-white tracking-tight">Cài Đặt & Quản Trị Hệ Thống</h1>
         <p className="text-sm text-zinc-400 mt-1">
-          Configure security review policies, AI monthly budgets, review modes, and RBAC team access.
+          Cấu hình chính sách kiểm duyệt an ninh, hạn mức chi phí AI hàng tháng, chế độ đánh giá và phân quyền thành viên.
         </p>
       </div>
 
@@ -65,13 +65,13 @@ export default function SettingsPage() {
         <div className="p-6 rounded-xl border border-zinc-800 bg-zinc-900/40 space-y-6">
           <div className="flex items-center gap-2 pb-4 border-b border-zinc-800">
             <Sliders className="w-5 h-5 text-amber-400" />
-            <h2 className="text-base font-bold text-white">Review & Policy Modes</h2>
+            <h2 className="text-base font-bold text-white">Chế Độ Đánh Giá & Chính Sách</h2>
           </div>
 
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-mono text-zinc-400 mb-1">
-                Workspace Name
+                Tên Không Gian Làm Việc
               </label>
               <input
                 type="text"
@@ -84,7 +84,7 @@ export default function SettingsPage() {
             {/* Review Mode Radio */}
             <div className="space-y-2">
               <label className="block text-xs font-mono text-zinc-400">
-                Pull Request Review Mode
+                Chế Độ Đánh Giá Pull Request
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <label
@@ -102,9 +102,9 @@ export default function SettingsPage() {
                     onChange={(e) => setReviewMode(e.target.value)}
                     className="sr-only"
                   />
-                  <div className="font-bold text-sm text-white">Advisory Mode (Default)</div>
+                  <div className="font-bold text-sm text-white">Chế Độ Tư Vấn (Advisory - Mặc định)</div>
                   <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                    Generates internal review reports in dashboard without writing inline comments to GitHub PR.
+                    Tạo báo cáo kiểm tra an ninh nội bộ trên giao diện, không tự ý bình luận công khai lên PR GitHub.
                   </p>
                 </label>
 
@@ -123,9 +123,9 @@ export default function SettingsPage() {
                     onChange={(e) => setReviewMode(e.target.value)}
                     className="sr-only"
                   />
-                  <div className="font-bold text-sm text-white">Review Mode (Active Publishing)</div>
+                  <div className="font-bold text-sm text-white">Chế Độ Kiểm Duyệt Trực Tiếp (Review Mode)</div>
                   <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                    Publishes security reviews and inline comments directly on GitHub PRs when high-severity flaws are confirmed.
+                    Tự động tạo nhận xét, đánh giá và gắn cờ cảnh báo trực tiếp trên GitHub PR khi phát hiện lỗ hổng nghiêm trọng.
                   </p>
                 </label>
               </div>
@@ -134,7 +134,7 @@ export default function SettingsPage() {
             {/* AI Budget */}
             <div>
               <label className="block text-xs font-mono text-zinc-400 mb-1">
-                Monthly AI Token Budget (USD)
+                Hạn Mức Chi Phí Token AI Hàng Tháng (USD)
               </label>
               <div className="flex items-center gap-2 max-w-xs">
                 <span className="text-zinc-400 font-mono text-sm">$</span>
@@ -152,17 +152,17 @@ export default function SettingsPage() {
             {saveSuccess ? (
               <span className="text-xs text-emerald-400 font-mono flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Settings saved successfully</span>
+                <span>Đã lưu cài đặt thành công</span>
               </span>
             ) : <span />}
 
             <button
               type="submit"
               disabled={isSaving}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors disabled:opacity-50 cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              <span>{isSaving ? "Saving..." : "Save Policy Changes"}</span>
+              <span>{isSaving ? "Đang lưu..." : "Lưu Thay Đổi Chính Sách"}</span>
             </button>
           </div>
         </div>
@@ -173,20 +173,20 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-amber-400" />
-            <h2 className="text-base font-bold text-white">Team Members & Role-Based Access Control</h2>
+            <h2 className="text-base font-bold text-white">Danh Sách Thành Viên & Phân Quyền (RBAC)</h2>
           </div>
-          <span className="text-xs text-zinc-500 font-mono">{members.length} members</span>
+          <span className="text-xs text-zinc-500 font-mono">{members.length} thành viên</span>
         </div>
 
         <div className="divide-y divide-zinc-800/60 font-mono text-xs">
           {members.map((m) => (
             <div key={m.id} className="py-3 flex items-center justify-between">
               <div>
-                <div className="font-semibold text-zinc-200">{m.user?.full_name || "Analyst"}</div>
+                <div className="font-semibold text-zinc-200">{m.user?.full_name || "Chuyên viên phân tích"}</div>
                 <div className="text-zinc-500">{m.user?.email || "analyst@sentinel.ai"}</div>
               </div>
               <span className="px-2 py-0.5 rounded font-bold bg-zinc-800 text-amber-400">
-                {m.role}
+                {m.role === "OWNER" ? "QUẢN TRỊ VIÊN (OWNER)" : m.role}
               </span>
             </div>
           ))}

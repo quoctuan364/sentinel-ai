@@ -27,12 +27,12 @@ export function Navbar() {
   }, []);
 
   const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: Activity },
-    { href: "/findings", label: "Findings", icon: ShieldAlert },
-    { href: "/repositories", label: "Repositories", icon: FolderGit2 },
-    { href: "/audit", label: "Audit Logs", icon: History },
-    { href: "/integrations", label: "Integrations", icon: Github },
-    { href: "/settings", label: "Settings", icon: Sliders },
+    { href: "/dashboard", label: "Bảng điều khiển", icon: Activity },
+    { href: "/findings", label: "Lỗ hổng bảo mật", icon: ShieldAlert },
+    { href: "/repositories", label: "Kho mã nguồn", icon: FolderGit2 },
+    { href: "/audit", label: "Nhật ký kiểm toán", icon: History },
+    { href: "/integrations", label: "Tích hợp GitHub", icon: Github },
+    { href: "/settings", label: "Cài đặt", icon: Sliders },
   ];
 
   return (
@@ -46,7 +46,7 @@ export function Navbar() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-lg">Sentinel</span>
-              <span className="text-xs px-1.5 py-0.5 rounded border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono font-medium">AI SEC</span>
+              <span className="text-xs px-1.5 py-0.5 rounded border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono font-medium">AI BẢO MẬT</span>
             </div>
           </Link>
 
@@ -86,12 +86,12 @@ export function Navbar() {
               }`}
             />
             <span className="font-mono">
-              {isHealthy === true ? "API ONLINE" : isHealthy === false ? "API OFFLINE" : "CONNECTING"}
+              {isHealthy === true ? "API HOẠT ĐỘNG" : isHealthy === false ? "MẤT KẾT NỐI API" : "ĐANG KẾT NỐI..."}
             </span>
           </div>
 
           <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400 border-l border-zinc-800 pl-4">
-            <span className="font-mono text-zinc-500">Workspace:</span>
+            <span className="font-mono text-zinc-500">Không gian:</span>
             <span className="font-medium text-zinc-200">Sec-Ops</span>
           </div>
         </div>
